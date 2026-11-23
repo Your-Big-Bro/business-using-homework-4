@@ -46,11 +46,7 @@
 Homework_4.ipynb              ← исполненный ноутбук (весь пайплайн)
 README.md                     ← этот файл
 requirements.txt              ← зависимости с версиями
-.gitignore                    ← .pylibs, Word/PDF, бинарники Prometheus, TSDB, кеши
-
-(локально, в репозиторий не коммитятся)
-Homework_4_report.docx/.pdf   ← отчёт: методика, таблицы, скриншоты, выводы (9 стр.)
-Homework_4_presentation.docx/.pdf ← презентация 16:9 (13 слайдов)
+.gitignore                    ← .pylibs, бинарники Prometheus, TSDB, кеши
 
 artifacts/
   data/                       ← credit-g (ARFF-кэш, исходный и дрифтованный CSV)
@@ -72,8 +68,8 @@ src/
 
 tools/
   make_notebook.py            ← генератор Homework_4.ipynb
-  make_report.py              ← сборка отчёта Word
-  make_presentation.py        ← сборка презентации Word
+  make_report.py              ← сборка отчёта (9 страниц)
+  make_presentation.py        ← сборка презентации (13 слайдов)
   start_demo.ps1              ← поднять всё для показа одной командой
   stop_demo.ps1               ← погасить экспортёр и Prometheus
   prometheus_screens.py       ← скриншоты UI через Playwright + Edge
@@ -328,8 +324,7 @@ powershell -ExecutionPolicy Bypass -File "tools\stop_demo.ps1"
 
 ## Сценарий демонстрации (кратко)
 
-0. **Презентация** — открыть `Homework_4_presentation.docx` (или PDF): 13 слайдов
-   16:9, по одному тезису на слайд, все скриншоты внутри.
+0. **Презентация** — 13 слайдов 16:9, по одному тезису на слайд, все скриншоты внутри.
 1. **Ноутбук** — `Homework_4.ipynb`, прокрутить сверху вниз: данные → модель
    (F1 0.588) → дрифт → Evidently → fairness. Ничего запускать не нужно.
 2. **Отчёт Evidently** — открыть `artifacts/evidently_drift_report.html`,
