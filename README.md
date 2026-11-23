@@ -1,17 +1,5 @@
 # ДЗ 4. Система мониторинга ML-модели
 
-Полный контур мониторинга кредитного скоринга: данные → модель CatBoost →
-симуляция дрифта → отчёт Evidently → аудит справедливости → метрики в Prometheus
-с алертами.
-
-**Курс:** «Бизнес-применение машинного обучения» · **Репозиторий:**
-[Your-Big-Bro/business-using-homework-4](https://github.com/Your-Big-Bro/business-using-homework-4)
-
-> `credit-g` (OpenML id 31) · CatBoost 1.2.10 · Evidently 0.7.23 · Prometheus 3.16.0 ·
-> Python 3.12 · Windows
-
----
-
 ## Задание и результат
 
 | № | Шаг задания | Что сделано |
