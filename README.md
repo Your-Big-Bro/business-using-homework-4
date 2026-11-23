@@ -194,7 +194,7 @@ SEX_MAP = {
 | EOD (TPR gap) | 0.052 | разрыв по «хорошим» клиентам |
 | DIR | 0.877 | > 0.8 → правило 80 % соблюдено |
 
-![Fairness](artifacts/figures/fairness_by_sex.png)
+![Fairness](artifacts/figures/fairness_by_sex.png?v=2)
 
 Вывод: формального нарушения правила 80 % нет, но разрыв в 10 п.п. заметен
 и должен отслеживаться алертом `FairnessDegraded` при росте DPD > 0.15.
