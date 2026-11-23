@@ -42,6 +42,7 @@
 ```
 Homework_4.ipynb              ← основной ноутбук (исполненный, с выводами)
 Homework_4_report.docx        ← отчёт Word: методика, результаты, скриншоты
+Homework_4_report.pdf         ← тот же отчёт в PDF (для печати и презентации)
 README.md                     ← этот файл
 requirements.txt              ← зависимости
 artifacts/
