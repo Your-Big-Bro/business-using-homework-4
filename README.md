@@ -1,28 +1,45 @@
 # ДЗ 4. Система мониторинга ML-модели
 
-Домашнее задание по курсу **«Бизнес-применение машинного обучения»**:
-полный контур мониторинга кредитного скоринга — от данных и модели
-до алертов в Prometheus.
+Полный контур мониторинга кредитного скоринга: данные → модель CatBoost →
+симуляция дрифта → отчёт Evidently → аудит справедливости → метрики в Prometheus
+с алертами.
 
-> Датасет: `credit-g` (OpenML id 31) · Модель: CatBoost · Дрифт: Evidently ·
-> Метрики: `/metrics` → Prometheus → алерты · Fairness: аудит по полу
+**Курс:** «Бизнес-применение машинного обучения» · **Репозиторий:**
+[Your-Big-Bro/business-using-homework-4](https://github.com/Your-Big-Bro/business-using-homework-4)
+
+> `credit-g` (OpenML id 31) · CatBoost 1.2.10 · Evidently 0.7.23 · Prometheus 3.16.0 ·
+> Python 3.12 · Windows
 
 ---
 
-## Что сделано (по пунктам задания)
+## Состав сдачи
 
-| № | Шаг | Результат |
-|---|-----|-----------|
-| 01 | Датасет | `credit-g`: 1000 клиентов, 20 признаков, кэш в `artifacts/data/credit_g.csv` |
-| 02 | Модель | `CatBoostClassifier`, F1 = **0.588**, ROC AUC = **0.796** на отложенной выборке |
-| 03 | Дрифт | `age` +5 лет, доля дефолтов 30 % → 7.9 % |
-| 04 | Evidently | дрифт в **4 из 21** колонки (19 %), включая `age` и `target`; HTML-отчёт |
-| 05 | Fairness | DPD = **0.101**, EOD = **0.052**, DIR = **0.877** (правило 80 % соблюдено) |
-| 06 | Prometheus | 5 правил алертов, живой сервер, падение F1 0.588 → 0.490 и горящий `ModelF1Critical` |
+| Формат | Файл |
+|---|---|
+| (а) Ноутбук + артефакты | [Homework_4.ipynb](Homework_4.ipynb), папка [artifacts/](artifacts/) |
+| (б) Отчёт Word с выводами и скриншотами | [Homework_4_report.docx](Homework_4_report.docx) · [PDF](Homework_4_report.pdf) |
+| (в) Ноутбук + README | [README.md](README.md) (этот файл) |
+| Презентация (Word, 16:9) | [Homework_4_presentation.docx](Homework_4_presentation.docx) · [PDF](Homework_4_presentation.pdf) |
+
+Ноутбук исполнен: 26 ячеек, 17 кодовых, все с выводами, 6 графиков внутри,
+ошибок нет. Отчёт — 9 страниц, презентация — 13 слайдов.
+
+---
+
+## Задание и результат
+
+| № | Шаг задания | Что сделано |
+|---|---|---|
+| 01 | Взять датасет `credit-g` | 1000 клиентов, 20 признаков, кэш в `artifacts/data/credit_g.csv` |
+| 02 | Обучить модель (CatBoost) | F1 = **0.588**, ROC AUC = **0.796** на отложенной выборке (n = 300) |
+| 03 | Сымитировать дрифт | `age` +5 лет, доля дефолтов 30 % → 7.9 % |
+| 04 | Запустить Evidently | дрифт в **4 из 21** колонки (19 %), включая `age` и `target`; HTML-отчёт |
+| 05 | Посчитать fairness по `sex` | DPD = **0.101**, EOD = **0.052**, DIR = **0.877** |
+| 06 | Экспортировать F1 в Prometheus | 5 правил, живой сервер, вживую сработали 3 алерта |
 
 ### Ключевые метрики
 
-| Метрика | Baseline (test) | После дрифта | Δ |
+| Метрика | Baseline (test, n = 300) | После дрифта (n = 228) | Δ |
 |---|---|---|---|
 | F1 (класс `bad`) | 0.588 | 0.490 | −16.7 % отн. |
 | Precision | 0.714 | 0.387 | −0.327 |
@@ -31,71 +48,100 @@
 | Accuracy | 0.790 | 0.890 | +0.100 |
 | Доля класса `bad` | 30.0 % | 7.9 % | −22.1 п.п. |
 
-> Падение F1 при росте accuracy — классическая ловушка дисбаланса:
-> модель «угадывает» редкий класс хуже, но общая доля верных ответов растёт.
-> Именно поэтому алерт настроен на F1, а не на accuracy.
+> Падение F1 при росте accuracy — классическая ловушка дисбаланса: модель хуже
+> ловит редкий класс, но общая доля верных ответов растёт. Поэтому алерт настроен
+> на F1, а не на accuracy.
 
 ---
 
 ## Структура репозитория
 
 ```
-Homework_4.ipynb              ← основной ноутбук (исполненный, с выводами)
-Homework_4_report.docx        ← отчёт Word: методика, результаты, скриншоты
-Homework_4_report.pdf         ← тот же отчёт в PDF (для печати и презентации)
-Homework_4_presentation.docx  ← презентация на 13 слайдов (Word, формат 16:9)
-Homework_4_presentation.pdf   ← она же в PDF (для показа со слайдами)
+Homework_4.ipynb              ← исполненный ноутбук (весь пайплайн)
+Homework_4_report.docx/.pdf   ← отчёт: методика, таблицы, скриншоты, выводы (9 стр.)
+Homework_4_presentation.docx/.pdf ← презентация 16:9 (13 слайдов)
 README.md                     ← этот файл
-requirements.txt              ← зависимости
+requirements.txt              ← зависимости с версиями
+.gitignore                    ← .pylibs, бинарники Prometheus, TSDB, кеши
+
 artifacts/
-  data/                       ← credit-g (исходный и дрифтованный), ARFF-кэш
-  figures/                    ← графики для отчёта и презентации
-  screenshots/                ← скриншоты Prometheus
-  evidently_drift_report.html ← интерактивный отчёт Evidently
+  data/                       ← credit-g (ARFF-кэш, исходный и дрифтованный CSV)
+  figures/                    ← 6 графиков для отчёта и презентации
+  screenshots/                ← 5 скриншотов Prometheus + prometheus_state.json
+  model/                      ← обученная модель catboost_credit_g.cbm
+  evidently_drift_report.html ← интерактивный отчёт Evidently (4.2 МБ)
+  evidently_drift_snapshot.json
   metrics.json                ← все метрики в машинночитаемом виде
-  model/                      ← обученная модель CatBoost (.cbm)
+
 prometheus/
-  prometheus.yml              ← конфиг скрейпинга
+  prometheus.yml              ← конфиг скрейпинга (:8000 → :9090)
   alerts.yml                  ← 5 правил алертов
+  VERSION.txt                 ← версия скачанного Prometheus
+
 src/
   metrics_exporter.py         ← экспортёр метрик (/metrics на :8000)
-  prototype.py                ← консольный прогон пайплайна (без ноутбука)
-tools/                        ← вспомогательные скрипты (загрузка данных, скриншоты)
+  prototype.py                ← тот же пайплайн без ноутбука (CLI)
+
+tools/
+  make_notebook.py            ← генератор Homework_4.ipynb
+  make_report.py              ← сборка отчёта Word
+  make_presentation.py        ← сборка презентации Word
+  prometheus_screens.py       ← скриншоты UI через Playwright + Edge
+  screenshots.py              ← то же через headless Edge (без Playwright)
+  fetch_data.py               ← загрузка credit-g
+  fetch_prometheus.py         ← загрузка Prometheus для Windows
+  pipx.py                     ← обёртка pip (обход проблемы с временными каталогами)
 ```
+
+Бинарники Prometheus (`prometheus/prometheus-*/`) и локальные библиотеки
+(`.pylibs/`) в репозиторий не входят — они восстанавливаются по инструкции ниже.
 
 ---
 
 ## Быстрый старт
 
-Требуется Python 3.12 (проверено на 3.12.14, Windows).
+Проверено на Python 3.12.14 (Windows). Библиотеки ставятся локально в `.pylibs`,
+системный Python не затрагивается — ноутбук сам добавляет эту папку в `sys.path`.
 
 ```powershell
-# 1. зависимости (локально, без установки в систему)
+# 1. зависимости
 python -m pip install --target .pylibs -r requirements.txt
 
-# 2. ноутбук
-jupyter nbconvert --to notebook --execute --inplace Homework_4.ipynb
+# 2. прогон ноутбука (создаст artifacts/, обучит модель, соберёт отчёт Evidently)
+python -m nbconvert --to notebook --execute --inplace Homework_4.ipynb
+
+# 3. (опционально) пересборка документов из готовых артефактов
+python tools/make_report.py
+python tools/make_presentation.py
 ```
 
-Ноутбук сам создаст `artifacts/`, обучит модель, посчитает дрифт,
-соберёт отчёт Evidently и запишет конфиги Prometheus.
+Пайплайн детерминирован: `random_state = 42`, стратифицированное разбиение 70/30,
+датасет кэшируется в `artifacts/data/credit_g.csv`, поэтому повторный прогон
+даёт те же цифры и не требует сети.
 
 ### Запуск мониторинга
 
 ```powershell
-# экспортёр метрик (терминал 1)
+# терминал 1 — экспортёр метрик
 $env:PYTHONPATH = "$PWD\.pylibs"
 python src/metrics_exporter.py --mode replay --port 8000
 
-# Prometheus (терминал 2)
+# терминал 2 — Prometheus
 .\prometheus\prometheus-3.16.0.windows-amd64\prometheus.exe `
     --config.file=prometheus\prometheus.yml `
     --storage.tsdb.path=prometheus\data `
     --web.listen-address=127.0.0.1:9090
 ```
 
-Открыть <http://127.0.0.1:9090/alerts> — через 3–4 минуты после старта
-`replay`-сценария (стабильная работа → линейная деградация) загораются алерты.
+Открыть <http://127.0.0.1:9090/alerts>: через 3–4 минуты работы `replay`-сценария
+(60 с стабильной работы → линейная деградация до измеренного уровня) загораются
+`ModelF1Drop`, `ModelF1Critical` и `DataDriftDetected`.
+
+Проверить конфиг без запуска:
+
+```powershell
+.\prometheus\prometheus-3.16.0.windows-amd64\promtool.exe check config prometheus\prometheus.yml
+```
 
 ---
 
@@ -106,19 +152,25 @@ CatBoost / батч-прогон  →  artifacts/metrics.json
                                 ↓
 src/metrics_exporter.py  (prometheus_client, :8000/metrics)
                                 ↓  scrape каждые 5 секунд
-Prometheus (:9090)  →  alerts.yml  →  Alertmanager / UI /alerts
+Prometheus (:9090)  →  alerts.yml  →  состояние FIRING в UI
 ```
 
-Экспортёр отдаёт гейджи:
+Два контура контроля:
+
+- **ранний** — Evidently ловит дрифт по входным данным, метки не нужны;
+- **поздний** — F1 и другие метрики качества появляются после разметки, зато точны.
+
+### Гейджи экспортёра
 
 | Метрика | Смысл |
 |---|---|
 | `model_f1_score` | текущий F1 по классу `bad` |
 | `model_f1_baseline` | F1 на валидации при обучении |
 | `model_f1_relative_drop` | относительное падение F1 |
-| `model_precision`, `model_recall`, `model_roc_auc` | качество |
-| `model_drift_share` | доля дрифтующих колонок (Evidently) |
-| `model_fairness_dpd`, `model_fairness_eod`, `model_fairness_dir` | fairness |
+| `model_precision`, `model_recall`, `model_roc_auc` | качество модели |
+| `model_positive_rate` | доля дефолтов в потоке |
+| `model_drift_share` | доля дрифтующих колонок по Evidently |
+| `model_fairness_dpd`, `model_fairness_eod`, `model_fairness_dir` | fairness по полу |
 
 ### Правила алертов (`prometheus/alerts.yml`)
 
@@ -130,25 +182,30 @@ Prometheus (:9090)  →  alerts.yml  →  Alertmanager / UI /alerts
 | `FairnessDegraded` | DPD > 0.15 дольше 1 мин | warning |
 | `DisparateImpactViolation` | DIR < 0.80 дольше 1 мин | warning |
 
-### Скриншоты живого Prometheus
+---
 
-**Горящие алерты** (`/alerts`):
+## Скриншоты живого Prometheus
+
+Сняты с работающего сервера во время `replay`-сценария (полный набор — в
+[`artifacts/screenshots/`](artifacts/screenshots/)).
+
+**Горящие алерты** (`/alerts`, свёрнутый вид — видно все три группы):
 
 ![Prometheus alerts](artifacts/screenshots/prometheus_alerts.png)
 
-**Алерт по F1 с выражением и значением** (`/alerts`):
+**Алерт по F1 раскрыт: выражение, аннотации, состояние FIRING, значение 0.167:**
 
 ![ModelF1Drop firing](artifacts/screenshots/prometheus_alerts_f1.png)
 
-**Падение F1** (`/graph`):
+**Падение F1: плато 0.588 → деградация → 0.490** (`/graph`):
 
 ![F1 drop](artifacts/screenshots/prometheus_graph_f1.png)
 
-**Рост дрифта** (`/graph`):
+**Рост дрифта: `model_drift_share` 0 → 0.190** (`/graph`):
 
 ![Drift share](artifacts/screenshots/prometheus_graph_drift.png)
 
-**Скрейпинг-таргеты** (`/targets`):
+**Скрейпинг-таргеты: оба в состоянии UP** (`/targets`):
 
 ![Targets](artifacts/screenshots/prometheus_targets.png)
 
@@ -156,16 +213,21 @@ Prometheus (:9090)  →  alerts.yml  →  Alertmanager / UI /alerts
 
 ## Evidently: что именно «уехало»
 
-Сравниваются обучающая выборка (reference) и дрифтованный поток (current),
+Сравниваются обучающая выборка (reference) и дрифтованный поток (current).
 `DataDriftPreset` прогоняет по каждой колонке статистический тест
-(K-S для числовых, Z-test/χ² для категориальных), порог p-value = 0.05.
+(K-S для числовых, Z-test / χ² для категориальных), порог p-value = 0.05.
 
-Итог: дрифт найден в **4 колонках из 21**, в том числе:
+Итог — дрифт в **4 колонках из 21** (drift share = 19 %):
 
-- `age` — сдвиг +5 лет (K-S, p ≈ 0);
-- `target` — доля дефолтов 30 % → 7.9 % (Z-test, p ≈ 0).
+| Колонка | p-value | Дрифт |
+|---|---|---|
+| `target` | 1.65e-11 | да |
+| `age` | 8.25e-09 | да |
+| `existing_credits` | 7.61e-03 | да |
+| `employment` | 2.22e-02 | да |
 
-Полный интерактивный отчёт: [`artifacts/evidently_drift_report.html`](artifacts/evidently_drift_report.html).
+Полный интерактивный отчёт:
+[`artifacts/evidently_drift_report.html`](artifacts/evidently_drift_report.html).
 
 ![Drift features](artifacts/figures/evidently_drift_features.png)
 
@@ -173,8 +235,8 @@ Prometheus (:9090)  →  alerts.yml  →  Alertmanager / UI /alerts
 
 ## Fairness по признаку `sex`
 
-В датасете `credit-g` **нет колонки `sex`** — пол закодирован в `personal_status`
-(`male single`, `female div/dep/mar`, …). Признак восстановлен так:
+В датасете `credit-g` **нет колонки `sex`** — пол закодирован в `personal_status`.
+Признак восстановлен так:
 
 ```python
 SEX_MAP = {
@@ -186,18 +248,22 @@ SEX_MAP = {
 Получено 690 мужчин и 310 женщин. Защищённый признак **не подаётся в модель** —
 он используется только для аудита.
 
+| Группа | N | Selection rate | TPR | FPR |
+|---|---|---|---|---|
+| female | 101 | 0.723 | 0.879 | 0.429 |
+| male | 199 | 0.824 | 0.931 | 0.545 |
+
 | Метрика | Значение | Интерпретация |
 |---|---|---|
-| Selection rate, male | 0.824 | доля одобрений |
-| Selection rate, female | 0.723 | доля одобрений |
-| DPD | 0.101 | разрыв одобрений ~10 п.п. |
-| EOD (TPR gap) | 0.052 | разрыв по «хорошим» клиентам |
-| DIR | 0.877 | > 0.8 → правило 80 % соблюдено |
+| DPD (demographic parity difference) | 0.101 | разрыв долей одобрений ≈ 10 п.п. |
+| EOD (equal opportunity difference) | 0.052 | разрыв TPR между группами |
+| Equalized odds (FPR gap) | 0.117 | разница ложноположительных одобрений |
+| DIR (disparate impact ratio) | 0.877 | > 0.80 → правило 80 % соблюдено |
 
 ![Fairness](artifacts/figures/fairness_by_sex.png?v=2)
 
-Вывод: формального нарушения правила 80 % нет, но разрыв в 10 п.п. заметен
-и должен отслеживаться алертом `FairnessDegraded` при росте DPD > 0.15.
+Вывод: формального нарушения правила 80 % нет, но разрыв в 10 п.п. заметен и
+должен отслеживаться алертом `FairnessDegraded` при росте DPD > 0.15.
 После дрифта разрыв слегка сократился (DPD 0.082), но модель стала одобрять
 заметно больше заявок в целом — это уже бизнес-риск, а не только ML-метрика.
 
@@ -205,39 +271,39 @@ SEX_MAP = {
 
 ## Ограничения и что улучшить
 
-- **Дрифт синтетический**: `age +5` и down-sampling класса `bad`. В проде
+- **Дрифт синтетический**: `age +5` и down-sampling класса `bad`. В продакшене
   дрифт приходит из реального потока заявок и требует адаптивных порогов.
-- **F1 считается при наличии меток** (с задержкой на созревание). В реальном
-  контуре нужен ещё прокси-мониторинг без меток (PSI, доля отказов, входной поток).
-- **Нет Alertmanager**: алерты видны в UI Prometheus, но не отправляются
-  в почту/Telegram. Для продакшена нужен Alertmanager + маршрутизация.
+- **F1 считается при наличии меток** (с задержкой на созревание). Нужен ещё
+  прокси-мониторинг без меток: PSI, доля отказов, объём входного потока.
+- **Нет Alertmanager**: алерты видны в UI Prometheus, но не уходят в почту/Telegram.
+  Для продакшена нужен Alertmanager с маршрутизацией и дедупликацией.
 - **Fairness только по полу**: стоит добавить возраст и `foreign_worker`,
-  а также проверить equalized odds и калибровку по группам.
-- **Порог 0.5 фиксирован**: в реальном скоринге порог выбирается по бизнес-стоимости
-  ошибок (FN дороже FP) и должен быть частью мониторинга.
+  проверить equalized odds и калибровку по группам.
+- **Порог 0.5 фиксирован**: в реальном скоринге он выбирается по бизнес-стоимости
+  ошибок (FN дороже FP) и тоже должен быть частью мониторинга.
+- **Датасет маленький** (1000 строк): метрики шумные, доверительные интервалы
+  широкие — для продакшена нужен больший объём и bootstrap-оценки.
 
 ---
 
 ## Сценарий демонстрации (для записи / защиты)
 
 0. **Презентация** — открыть `Homework_4_presentation.docx` (или PDF): 13 слайдов
-   на 16:9, по одному тезису на слайд, все скриншоты уже внутри.
-1. **Ноутбук** — открыть `Homework_4.ipynb`, прокрутить сверху вниз: данные →
-   модель (F1 0.588) → дрифт → отчёт Evidently → fairness. Все выводы уже внутри,
-   ничего запускать не нужно.
-2. **Отчёт Evidently** — открыть `artifacts/evidently_drift_report.html` в браузере,
-   показать таблицу дрифта и `age`.
-3. **Живой Prometheus** — открыть <http://127.0.0.1:9090/alerts>: `ModelF1Drop`,
-   `ModelF1Critical` и `DataDriftDetected` в состоянии FIRING; на `/graph`
-   показать кривую падения `model_f1_score` с 0.588 до 0.490.
-4. **Вывод на слайд** — «мониторинг = ранний контур (дрифт без меток) + поздний
-   контур (качество с метками) + аудит справедливости».
+   16:9, по одному тезису на слайд, все скриншоты внутри.
+1. **Ноутбук** — `Homework_4.ipynb`, прокрутить сверху вниз: данные → модель
+   (F1 0.588) → дрифт → Evidently → fairness. Ничего запускать не нужно.
+2. **Отчёт Evidently** — открыть `artifacts/evidently_drift_report.html`,
+   показать таблицу дрифта и колонку `age`.
+3. **Живой Prometheus** — <http://127.0.0.1:9090/alerts>: три алерта в FIRING;
+   на `/graph` показать кривую падения `model_f1_score` с 0.588 до 0.490.
+4. **Вывод** — «мониторинг = ранний контур (дрифт без меток) + поздний контур
+   (качество с метками) + аудит справедливости».
 
-> Если Prometheus уже остановлен — запустить по инструкции выше и подождать
-> 3–4 минуты: экспортёр воспроизводит сценарий деградации заново.
+> Если Prometheus остановлен — запустить по инструкции выше и подождать 3–4 минуты:
+> экспортёр воспроизведёт сценарий деградации заново.
 
 ---
 
 ## Автор
 
-Домашняя работа №4, курс «Бизнес-применение машинного обучения».
+Домашняя работа № 4, курс «Бизнес-применение машинного обучения».
