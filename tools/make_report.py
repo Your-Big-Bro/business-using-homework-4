@@ -358,6 +358,7 @@ def build() -> str:
         ["Путь", "Содержимое"],
         [
             ["Homework_4.ipynb", "исполненный ноутбук со всеми шагами"],
+            ["Homework_4_presentation.docx / .pdf", "презентация на 13 слайдов (Word, 16:9)"],
             ["artifacts/evidently_drift_report.html", "интерактивный отчёт Evidently"],
             ["artifacts/figures/*.png", "графики для отчёта и презентации"],
             ["artifacts/screenshots/*.png", "скриншоты Prometheus"],
@@ -384,4 +385,5 @@ def build() -> str:
 
 if __name__ == "__main__":
     build()
+
 
