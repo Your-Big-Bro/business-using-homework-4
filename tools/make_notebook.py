@@ -503,7 +503,7 @@ for ax, metric, title in zip(
     ["Selection rate (доля одобрений)", "TPR (equal opportunity)", "FPR"],
 ):
     vals = fair_table[metric].astype(float)
-    bars = ax.bar(vals.index, vals.values, color=["#e9c46a", "#457b9d"])
+    bars = ax.bar(vals.index, vals.values, color=["#6C3FC5", "#3BB273"])
     ax.set_title(title)
     ax.set_ylim(0, 1.05)
     for b, v in zip(bars, vals.values):

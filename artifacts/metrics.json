@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-23T16:52:00.566615+00:00",
+  "generated_at": "2026-11-23T17:08:41.895466+00:00",
   "dataset": {
     "name": "credit-g (OpenML id 31)",
     "rows": 1000,
@@ -72,11 +72,11 @@
           "drifted": false
         },
         "purpose": {
-          "p_value": 0.10048320734491906,
+          "p_value": 0.1004832073449191,
           "drifted": false
         },
         "savings_status": {
-          "p_value": 0.11232243773070749,
+          "p_value": 0.1123224377307074,
           "drifted": false
         },
         "checking_status": {
@@ -112,7 +112,7 @@
           "drifted": false
         },
         "property_magnitude": {
-          "p_value": 0.8001970233951311,
+          "p_value": 0.8001970233951312,
           "drifted": false
         },
         "num_dependents": {
