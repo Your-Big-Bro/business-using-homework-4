@@ -1,10 +1,16 @@
 # Локальные библиотеки (ставятся из requirements.txt)
 .pylibs/
 
+# Сдаточные документы Word/PDF в репозитории не хранятся —
+# собираются из артефактов: tools/make_report.py, tools/make_presentation.py
+*.docx
+*.pdf
+
 # Prometheus: бинарники и TSDB-данные не коммитим
 prometheus/prometheus-*/
 prometheus/data/
 prometheus/*.zip
+prometheus/*.log
 
 # Временные файлы
 .tmp-edge-profile/
@@ -20,4 +26,3 @@ artifacts/*.log
 Thumbs.db
 desktop.ini
 .DS_Store
-prometheus/*.log

@@ -17,9 +17,13 @@
 | Формат | Файл |
 |---|---|
 | (а) Ноутбук + артефакты | [Homework_4.ipynb](Homework_4.ipynb), папка [artifacts/](artifacts/) |
-| (б) Отчёт Word с выводами и скриншотами | [Homework_4_report.docx](Homework_4_report.docx) · [PDF](Homework_4_report.pdf) |
+| (б) Отчёт Word с выводами и скриншотами | `Homework_4_report.docx` + `.pdf` — сдаётся отдельно, собирается `tools/make_report.py` |
 | (в) Ноутбук + README | [README.md](README.md) (этот файл) |
-| Презентация (Word, 16:9) | [Homework_4_presentation.docx](Homework_4_presentation.docx) · [PDF](Homework_4_presentation.pdf) |
+| Презентация (Word, 16:9) | `Homework_4_presentation.docx` + `.pdf` — сдаётся отдельно, собирается `tools/make_presentation.py` |
+
+> В репозитории намеренно нет файлов Word и PDF — только исходники и артефакты,
+> из которых они собираются одной командой. Это держит репозиторий лёгким и
+> избавляет от бинарных конфликтов; сами документы приложены к сдаче отдельно.
 
 Ноутбук исполнен: 26 ячеек, 17 кодовых, все с выводами, 6 графиков внутри,
 ошибок нет. Отчёт — 9 страниц, презентация — 13 слайдов.
@@ -58,11 +62,13 @@
 
 ```
 Homework_4.ipynb              ← исполненный ноутбук (весь пайплайн)
-Homework_4_report.docx/.pdf   ← отчёт: методика, таблицы, скриншоты, выводы (9 стр.)
-Homework_4_presentation.docx/.pdf ← презентация 16:9 (13 слайдов)
 README.md                     ← этот файл
 requirements.txt              ← зависимости с версиями
-.gitignore                    ← .pylibs, бинарники Prometheus, TSDB, кеши
+.gitignore                    ← .pylibs, Word/PDF, бинарники Prometheus, TSDB, кеши
+
+(локально, в репозиторий не коммитятся)
+Homework_4_report.docx/.pdf   ← отчёт: методика, таблицы, скриншоты, выводы (9 стр.)
+Homework_4_presentation.docx/.pdf ← презентация 16:9 (13 слайдов)
 
 artifacts/
   data/                       ← credit-g (ARFF-кэш, исходный и дрифтованный CSV)
