@@ -21,6 +21,7 @@ __pycache__/
 *.pyc
 .ipynb_checkpoints/
 artifacts/*.log
+artifacts/demo_status.txt
 
 # Файлы ОС
 Thumbs.db
