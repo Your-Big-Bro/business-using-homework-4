@@ -1,0 +1,22 @@
+{
+  "alerts": [
+    {
+      "name": "ModelF1Drop",
+      "state": "firing",
+      "severity": "warning",
+      "summary": "F1 модели упал более чем на 10% от baseline"
+    },
+    {
+      "name": "ModelF1Critical",
+      "state": "firing",
+      "severity": "critical",
+      "summary": "Критическое падение F1"
+    },
+    {
+      "name": "DataDriftDetected",
+      "state": "firing",
+      "severity": "warning",
+      "summary": "Дрифт данных: 19.05% признаков"
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+# Зависимости проекта ДЗ 4 (Python 3.12, Windows)
+# Установка локально: python -m pip install --target .pylibs -r requirements.txt
+numpy==2.5.5
+pandas==2.3.3
+scipy==1.18.1
+scikit-learn==1.9.1
+catboost==1.2.10
+evidently==0.7.23
+matplotlib==3.11.2
+plotly==5.24.1
+prometheus_client==0.26.0
+fairlearn==0.15.0
+nbformat==5.11.1
+nbconvert==7.17.2
+nbclient==0.11.0
+ipykernel==7.4.0

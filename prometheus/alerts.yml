@@ -1,0 +1,66 @@
+groups:
+  - name: model-quality
+    rules:
+      - alert: ModelF1Drop
+        expr: (model_f1_baseline - model_f1_score) / model_f1_baseline > 0.10
+        for: 1m
+        labels:
+          severity: warning
+          component: model-quality
+        annotations:
+          summary: "F1 модели упал более чем на 10% от baseline"
+          description: >
+            Текущий F1 = {{ $value | humanizePercentage }} относительно baseline.
+            Модель деградировала, вероятен дрифт данных — проверьте отчёт Evidently.
+
+      - alert: ModelF1Critical
+        expr: model_f1_score < 0.52
+        for: 30s
+        labels:
+          severity: critical
+          component: model-quality
+        annotations:
+          summary: "Критическое падение F1"
+          description: >
+            F1 ниже аварийного порога 0.52. Требуется переобучение модели
+            или откат на предыдущую версию.
+
+  - name: data-drift
+    rules:
+      - alert: DataDriftDetected
+        expr: model_drift_share > 0.15
+        for: 30s
+        labels:
+          severity: warning
+          component: data-drift
+        annotations:
+          summary: "Дрифт данных: {{ $value | humanizePercentage }} признаков"
+          description: >
+            Evidently фиксирует дрифт более чем в 15% колонок.
+            Проверьте artifacts/evidently_drift_report.html.
+
+  - name: fairness
+    rules:
+      - alert: FairnessDegraded
+        expr: model_fairness_dpd > 0.15
+        for: 1m
+        labels:
+          severity: warning
+          component: fairness
+        annotations:
+          summary: "Демографический паритет нарушен"
+          description: >
+            Разница долей одобрений между мужчинами и женщинами превысила 0.15 —
+            модель дискриминирует одну из групп.
+
+      - alert: DisparateImpactViolation
+        expr: model_fairness_dir < 0.80
+        for: 1m
+        labels:
+          severity: warning
+          component: fairness
+        annotations:
+          summary: "Нарушено правило 80%"
+          description: >
+            Disparate impact ratio ниже 0.80 — стандартный юридический порог
+            дискриминации по защищённому признаку.

@@ -1,0 +1,177 @@
+{
+  "generated_at": "2026-11-23T16:52:00.566615+00:00",
+  "dataset": {
+    "name": "credit-g (OpenML id 31)",
+    "rows": 1000,
+    "features": 20,
+    "target": "class (good/bad), positive = bad"
+  },
+  "model": {
+    "algorithm": "CatBoostClassifier",
+    "iterations": 244,
+    "random_state": 42
+  },
+  "baseline": {
+    "sample": "baseline (test)",
+    "n": 300,
+    "positive_rate": 0.3,
+    "f1": 0.5882352941176471,
+    "precision": 0.7142857142857143,
+    "recall": 0.5,
+    "roc_auc": 0.7963492063492064,
+    "accuracy": 0.79
+  },
+  "drifted": {
+    "sample": "drifted (age+5, новый баланс)",
+    "n": 228,
+    "positive_rate": 0.07894736842105263,
+    "f1": 0.4897959183673469,
+    "precision": 0.3870967741935484,
+    "recall": 0.6666666666666666,
+    "roc_auc": 0.8957671957671958,
+    "accuracy": 0.8903508771929824
+  },
+  "drift": {
+    "simulated": {
+      "age_shift_years": 5,
+      "keep_bad_share": 0.2,
+      "target_share_bad_before": 0.3,
+      "target_share_bad_after": 0.07894736842105263
+    },
+    "evidently": {
+      "drifted_columns": 4,
+      "total_columns": 21,
+      "drift_share": 0.19047619047619047,
+      "per_column": {
+        "target": {
+          "p_value": 1.6512125000645028e-11,
+          "drifted": true
+        },
+        "age": {
+          "p_value": 8.248674065846735e-09,
+          "drifted": true
+        },
+        "existing_credits": {
+          "p_value": 0.007607728360936537,
+          "drifted": true
+        },
+        "employment": {
+          "p_value": 0.022175660358564622,
+          "drifted": true
+        },
+        "job": {
+          "p_value": 0.0645966085625753,
+          "drifted": false
+        },
+        "other_payment_plans": {
+          "p_value": 0.08845210912230123,
+          "drifted": false
+        },
+        "credit_history": {
+          "p_value": 0.09159440526390342,
+          "drifted": false
+        },
+        "purpose": {
+          "p_value": 0.10048320734491906,
+          "drifted": false
+        },
+        "savings_status": {
+          "p_value": 0.11232243773070749,
+          "drifted": false
+        },
+        "checking_status": {
+          "p_value": 0.12120387523692921,
+          "drifted": false
+        },
+        "other_parties": {
+          "p_value": 0.16097827822718752,
+          "drifted": false
+        },
+        "residence_since": {
+          "p_value": 0.18899008197931833,
+          "drifted": false
+        },
+        "credit_amount": {
+          "p_value": 0.3615385926807364,
+          "drifted": false
+        },
+        "installment_commitment": {
+          "p_value": 0.46238968849437334,
+          "drifted": false
+        },
+        "foreign_worker": {
+          "p_value": 0.522123046892746,
+          "drifted": false
+        },
+        "personal_status": {
+          "p_value": 0.5857949005303555,
+          "drifted": false
+        },
+        "duration": {
+          "p_value": 0.6196986366167146,
+          "drifted": false
+        },
+        "property_magnitude": {
+          "p_value": 0.8001970233951311,
+          "drifted": false
+        },
+        "num_dependents": {
+          "p_value": 0.855313553458404,
+          "drifted": false
+        },
+        "housing": {
+          "p_value": 0.8706796520488894,
+          "drifted": false
+        },
+        "own_telephone": {
+          "p_value": 0.9231959227804016,
+          "drifted": false
+        }
+      }
+    }
+  },
+  "fairness_baseline": {
+    "groups": {
+      "female": {
+        "n": 101,
+        "selection_rate": 0.7227722772277227,
+        "tpr": 0.8787878787878788,
+        "fpr": 0.42857142857142855,
+        "f1_bad": 0.6349206349206349
+      },
+      "male": {
+        "n": 199,
+        "selection_rate": 0.8241206030150754,
+        "tpr": 0.9305555555555556,
+        "fpr": 0.5454545454545454,
+        "f1_bad": 0.5555555555555556
+      }
+    },
+    "demographic_parity_difference": 0.10134832578735264,
+    "equal_opportunity_difference": 0.051767676767676796,
+    "equalized_odds_fpr_difference": 0.11688311688311687,
+    "disparate_impact_ratio": 0.8770224583433953
+  },
+  "fairness_drifted": {
+    "groups": {
+      "female": {
+        "n": 73,
+        "selection_rate": 0.8082191780821918,
+        "tpr": 0.8787878787878788,
+        "fpr": 0.14285714285714285,
+        "f1_bad": 0.5714285714285714
+      },
+      "male": {
+        "n": 155,
+        "selection_rate": 0.8903225806451613,
+        "tpr": 0.9236111111111112,
+        "fpr": 0.45454545454545453,
+        "f1_bad": 0.42857142857142855
+      }
+    },
+    "demographic_parity_difference": 0.08210340256296955,
+    "equal_opportunity_difference": 0.044823232323232376,
+    "equalized_odds_fpr_difference": 0.3116883116883117,
+    "disparate_impact_ratio": 0.9077824101647806
+  }
+}

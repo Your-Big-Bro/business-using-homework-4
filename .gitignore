@@ -1,0 +1,23 @@
+# Локальные библиотеки (ставятся из requirements.txt)
+.pylibs/
+
+# Prometheus: бинарники и TSDB-данные не коммитим
+prometheus/prometheus-*/
+prometheus/data/
+prometheus/*.zip
+
+# Временные файлы
+.tmp-edge-profile/
+*.tmp
+pip-*/
+tmp*/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+artifacts/*.log
+
+# Файлы ОС
+Thumbs.db
+desktop.ini
+.DS_Store
+prometheus/*.log
